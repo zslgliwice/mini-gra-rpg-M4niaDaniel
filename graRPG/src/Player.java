@@ -7,9 +7,10 @@ public class Player {
 
     public Player(int maxHp, int gold, int baseAttack) {
         this.maxHp = maxHp;
-        this.hp = maxHp; // Start at full health
+        this.hp = maxHp;
         this.gold = gold;
         this.baseA = baseAttack;
+        this.multiplier = 1;
     }
 
     public void setBaseA(int baseAtt) {
@@ -44,5 +45,11 @@ public class Player {
 
     public int getMaxHp() {
         return maxHp;
+    }
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
+    }
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
     }
 }

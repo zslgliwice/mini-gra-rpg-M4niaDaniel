@@ -36,7 +36,8 @@ public class Event {
                     String inputE = scanner.nextLine().trim();
 
                     if (inputE.equalsIgnoreCase("fight")) {
-                        int damage = rand.nextInt(player.getDamage() / 2) + player.getDamage() / 2;
+                        System.out.println(player.getDamage());
+                        int damage = rand.nextInt(player.getDamage()  / 2) + player.getDamage() / 2;
                         enemy.setHp(enemy.getHp() - damage);
                         System.out.println(
                                 "You hit the " + enemy.getRace().getDisplayName() + " for " + damage + " damage.");
@@ -59,14 +60,14 @@ public class Event {
                     } else if (inputE.equalsIgnoreCase("run")) {
                         if (rand.nextInt(2) != 0) {
                             player.setHp(player.getHp() - enemy.getDmg());
-                            System.out.println("You've suffered " + enemy.getDmg() + " damage while running away.");//Full dmg when running
-
+                            System.out.println("You've suffered " + enemy.getDmg() + " damage while running away.");
+                                                                                                                    
                             if (player.getHp() <= 0) {
                                 System.out.println("You have been defeated!");
                                 return false;
                             }
                         } else {
-                            System.out.println("You successfully escaped!");
+                            System.out.println("You've successfully escaped!");
                             return true;
                         }
                     } else {
@@ -77,8 +78,57 @@ public class Event {
 
             case TREASURE:
                 System.out.println("It's your lucky day, you've found a treasure!");
-                return true;
+                switch (rand.nextInt(3)) {
+                    case 0:
+                        System.out.println("Oh, the treasure was empty");
+                        return true;
+                    case 1:
+                        int gold = rand.nextInt(11) + 5;
+                        player.setGold(player.getGold() + gold);
+                        System.out.println("You've found " + gold + " gold!");
+                        return true;
+                    case 2:
+                        System.out.println("It's a trap!");
+                        int damage = rand.nextInt(11) + 5;
+                        player.setHp(player.getHp() - damage);
+                        System.out.println("You've suffered " + damage + " damage from the trap.");
+                        if (player.getHp() <= 0) {
+                            System.out.println("You have been defeated!");
+                            return false;
+                        }
+                        return true;
+                    case 3:
+                        System.out.println("You've found an item!");
+                        Item.ItemType[] itemTypes = Item.ItemType.values();
+                        Item.ItemType itemType = itemTypes[rand.nextInt(itemTypes.length)];
+                        switch (itemType) {
+                            case WEAPON:
+                                System.out.println("You've found a weapon!");
+                                Weapon.WeaponType[] weaponTypes = Weapon.WeaponType.values();
+                                Weapon.WeaponType weaponType = weaponTypes[rand.nextInt(weaponTypes.length)];
 
+                                Weapon weapon = new Weapon(weaponType);
+                                player.setMultiplier(weapon.weaponType.getDamage());
+                                return true;
+                            case ARMOR:
+                                System.out.println("You've found an armor!");
+                                Armor.ArmorType[] armorTypes = Armor.ArmorType.values();
+                                Armor.ArmorType armorType = armorTypes[rand.nextInt(armorTypes.length)];
+                                Armor armor = new Armor(armorType);
+                                player.setMaxHp(player.getMaxHp() + armor.getDamage());
+                                return true;
+                            case FOOD:
+                                System.out.println("You've found some food!");
+                                int hp = rand.nextInt(11) + 5;
+                                player.setHp(player.getHp() + hp);
+                                System.out.println("You've restored " + hp + " health.");
+                                return true;
+                            default:
+                                return true;
+                        }
+                    default:
+                        return true;
+                }
             case CAMP:
                 int price = rand.nextInt(4) + 3;
 
@@ -115,9 +165,9 @@ public class Event {
     }
 
     public static EventType randomType() {
-        int enemyWeight = 50;
-        int treasureWeight = 22;
-        int campWeight = 22;
+        int enemyWeight = 35;
+        int treasureWeight = 30;
+        int campWeight = 30;
         int endWeight = 5;
 
         int totalWeight = enemyWeight + treasureWeight + campWeight + endWeight;
